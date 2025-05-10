@@ -1,0 +1,448 @@
+//Christian Dave Gesim   BSIT 2C   MyStackArray
+import java.util.Scanner;
+
+public class Main
+{
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String [] menu = {"Add","Search","Search Part 2","Remove 1","Remove 2","Edit 1","Edit 2","Get","Insert","Go Back"};
+        int size = 0;
+        MyArrayList Items =new MyArrayList(size);
+        boolean reloop = false, reloop2 =false;
+        int choice1=0,choice2=0,location=0;
+        String item="",new_item="";
+
+
+        System.out.println("My ArrayList Menu:");
+
+        while(!reloop){
+
+            System.out.println("1. Create Array\n2. Exit");
+            System.out.print("Enter Choice: ");
+            
+            choice1=tryParseInt(scanner);
+
+            if(choice1==1){
+                System.out.printf("Enter the size of the Array: ");
+                size= tryParseInt(scanner);
+                if(size<5){
+                    System.out.println("---- Size is too small for the array... \n--- Changing into default array size of 10. ---");
+                    size=10;
+                }else if(size>50){
+                    System.out.println("---- Size is too large for the array... \n--- Changing into default array size of 10. ---");
+                    size =10;
+                }
+
+                if(size!=-1){
+                    while(!reloop2){
+                        System.out.println("\n=============Main Menu============");
+                        displayOptions(menu);
+                        System.out.printf("-->Enter Choice: ");
+
+                        choice2=scanner.nextInt();
+                        if(choice2!=-1) {
+
+                            switch (choice2) {//GO BACK TO MAIN MENU
+                                case 0:
+                                    System.out.println("Exiting main menu......");
+                                    reloop2 = true;
+                                    break;
+                                case 1://ADD
+
+                                    System.out.print("-->Enter the number of items you want to add: ");
+                                    scanner.nextLine();
+                                    int no_of_items = tryParseInt(scanner);
+                                    if(no_of_items>size){
+                                        System.out.println("--- The number of items to add exceeds the array size.---\n---Changing into default of 10 ---");
+                                        no_of_items=10;
+                                    }else if(no_of_items<=0){
+                                        System.out.println("-- The number of items to add should not be 0.---\n--- Changing into default of 10 ---");
+                                        no_of_items=10;
+                                    }
+                                    for (int i = 0; i < no_of_items; i++) {
+
+                                        System.out.printf("-->Enter item # %d: ", i + 1);
+                                        item = scanner.next();
+                                        if (!Items.add(item)) {
+                                            System.out.println("--- his item already exist in the list. Enter another one.---");
+                                            i--;
+                                            continue;
+                                        }
+                                        Items.add(item);
+                                    }
+                                    System.out.println("---ArrayList Contents---");
+                                    Items.display();
+                                    System.out.println("Items Successfully Added!........");
+                                    break;
+                                case 2://SEARCH PART1
+                                    if (Items.checkIfEmpty()) {
+                                        System.out.println("---There are no items in the array at this moment.---");
+                                        System.out.println("---Please add items first.---");
+                                        break;
+                                    } else {
+                                        Items.display();
+                                        System.out.printf("-->Enter an item you want to search: ");
+                                        item = scanner.next();
+                                        if (Items.search(item)) {
+                                            System.out.println("---The item '" + item + "' is in the list ---");
+                                        } else {
+                                            System.out.println("---The item '" + item + "' is not in the list--- ");
+                                        }
+                                    }
+                                    break;
+                                case 3://SEARCH PART2
+                                    if (Items.checkIfEmpty()) {
+                                        System.out.println("---There are no items in the array at this moment.---");
+                                        System.out.println("---Please add items first.---");
+                                        break;
+                                    } else {
+                                        Items.display();
+                                        System.out.printf("-->Enter an item you want to locate: ");
+                                        item = scanner.next();
+                                        location = Items.searchPart2(item) + 1;
+                                        if (Items.searchPart2(item) != -1) {
+                                            System.out.println("The item '" + item + "' is located in the location " + location);
+                                        } else {
+                                            System.out.println("---This item is not in the list---");
+                                        }
+                                    }
+                                    break;
+                                case 4://REMOVE PART1
+                                    if (Items.checkIfEmpty()) {
+                                        System.out.println("---There are no items in the array at this moment.---");
+                                        System.out.println("---Please add items first.---");
+                                        break;
+                                    } else {
+                                        Items.display();
+                                        System.out.print("-->Enter the item to remove: ");
+                                        item = scanner.next();
+                                        if (Items.remove(item)) {
+                                            System.out.println("Item Removed.....\n---New ArrayList Contents:---");
+                                            Items.display();
+                                        } else {
+                                            System.out.println("---This item is not in the list---");
+                                        }
+                                    }
+                                    break;
+                                case 5://REMOVE PART2
+                                    if (Items.checkIfEmpty()) {
+                                        System.out.println("---There are no items in the array at this moment.---");
+                                        System.out.println("---Please add items first.---");
+                                        break;
+                                    } else {
+                                        Items.display();
+                                        System.out.print("-->Enter the location of item to remove :");
+                                        scanner.nextLine();
+                                        location = tryParseInt(scanner);
+                                        if (Items.remove(location - 1)) {
+                                            System.out.println("Item Removed.......\n---New ArrayList Contents---");
+                                            Items.display();
+                                        } else if (location > size - 1) {
+                                            System.out.println("---Invalid! This location exceeds the Arraylist size---");
+                                        } else {
+                                            System.out.println("---This location is empty---");
+                                        }
+                                    }
+                                    break;
+                                case 6://EDIT PART1
+                                    if (Items.checkIfEmpty()) {
+                                        System.out.println("---There are no items in the array at this moment.---");
+                                        System.out.println("---Please add items first.---");
+                                        return;
+                                    }
+                                    while (true) {
+
+                                    Items.display();
+                                    System.out.print("-->Enter the location of the item you want to edit: ");
+                                    scanner.nextLine();
+                                    location = tryParseInt(scanner);
+
+                                    if (location < 0 || location >= size) {
+                                        System.out.println("---Invalid! This location exceeds the ArrayList size.---");
+                                        continue;
+                                    }
+
+                                        System.out.print("-->Enter an item: ");
+                                        item = scanner.next();
+
+                                        if (Items.search(item)) {
+                                            System.out.println("---This item already exists in the list. Please enter another one.---");
+                                            continue;
+                                        }
+
+                                        if (Items.edit(item, location)) {
+                                            System.out.println("Item successfully edited......\n---New ArrayList Contents:---");
+                                            Items.display();
+                                            break;
+                                        } else {
+                                            System.out.println("---Failed to edit item. Please try again.---");
+                                        }
+                                    }
+                                    break;
+                                case 7://EDIT PART 2
+
+                                    if (Items.checkIfEmpty()) {
+                                        System.out.println("---There are no items in the array at this moment.---");
+                                        System.out.println("---Please add items first.---");
+                                        return;
+                                    }
+
+                                    while (true) {
+                                        Items.display();
+                                        System.out.print("-->Enter the item you want to edit: ");
+                                        item = scanner.next();
+
+                                        if (!Items.search(item)) {
+                                            System.out.println("---The item '" + item + "' is not in the list.---");
+                                            continue;
+                                        }
+
+                                        System.out.print("-->Enter a new item: ");
+                                        new_item = scanner.next();
+
+                                        if (Items.search(new_item)) {
+                                            System.out.println("---The item '" + new_item + "' already exists in the list. Please enter another one.---");
+                                            continue;
+                                        }
+
+                                        if (Items.edit(item, new_item)) {
+                                            System.out.println("Item successfully edited.......\n---New ArrayList Contents---");
+                                            Items.display();
+                                            break;
+                                        } else {
+                                            System.out.println("---Failed to edit the item. Please try again.---");
+                                        }
+                                    }
+                                    break;
+                                case 8://GET
+
+                                    if(Items.checkIfEmpty()){
+                                        System.out.println("---There are no items in the array at this moment.---");
+                                        System.out.println("---Please add items first.---");
+                                        break;
+                                    }else {
+                                        System.out.print("-->Enter the location you want to get: ");
+                                        scanner.nextLine();
+                                        location = tryParseInt(scanner);
+                                        if (Items.get(location) != null) {
+                                            System.out.println("The item in the location " + location + " is :" + Items.get(location));
+                                        } else if (location > size || location < 0) {
+                                            System.out.println("---The location exceeds the ArrayList size---");
+                                        } else {
+                                            System.out.println("---This location is empty---");
+                                        }
+                                    }
+                                    break;
+
+                                case 9://INSERT
+                                    if (Items.checkIfEmpty()) {
+                                        System.out.println("---There are no items in the array at this moment.---");
+                                        System.out.println("---Please add items first.---");
+                                    } else {
+                                        Items.display();
+
+                                            System.out.print("-->Enter the location where you want to insert: ");
+                                            scanner.nextLine();
+                                            location = tryParseInt(scanner);
+                                            if (location > size - 1) {
+                                                System.out.println("---Invalid. The location exceeds the array size---");
+                                                return;
+                                            }
+                                        while (true) {
+                                            System.out.print("-->Enter the item you want to insert: ");
+                                            String insert_item = scanner.next();
+
+                                            if (Items.search(insert_item)) {
+                                                System.out.println("---The item '" + insert_item + "' already exists in the list. Please enter another one.---");
+                                                continue;
+                                            }
+
+                                            if (Items.insert(insert_item, location)) {
+                                                System.out.println("---Item successfully inserted---");
+                                                System.out.println("New ArrayList Contents");
+                                                Items.display();
+                                                break;
+                                            } else {
+                                                System.out.println("---Insertion was not successful.Exceeds the number of items---");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }else if(choice1==2){//EXIT THE PROGRAM
+                System.out.println("Exiting the program........");
+                reloop=true;
+            }else if(choice1>2){
+                System.out.println("Invalid! Please enter 1 or 2 only");
+            }
+        }
+
+
+    }
+
+    public static void displayOptions(String [] menu){
+
+        for(int i = 0 ; i < menu.length-1; i++ ){
+            System.out.println(i+1+". "+menu[i]);
+        }
+        System.out.println("0. "+menu[menu.length-1]);
+    }
+    public static int tryParseInt(Scanner scanner) {
+        while (true) {
+            try {
+                String input = scanner.nextLine();
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid input! Please enter a valid number: ");
+            }
+        }
+    }
+
+}
+class MyArrayList{
+    private Object [] items;
+    private int count;
+    public MyArrayList(){
+        items =new Object[10];
+        count = 0;
+
+    }
+
+    public MyArrayList(int size){
+        if(size>= 5 && size <=50){
+            items = new Object[size];
+        }else{
+            items = new Object[10];
+        }
+        count =0;
+    }
+
+
+    private boolean isFull(){
+        return count==items.length;
+    }
+    private boolean isEmpty(){
+        return count ==0;
+    }
+    private boolean isLocationValid(int location){
+        return location >= 0 && location <= count-1;
+    }
+    public boolean add(Object i){
+        if(!isFull()){
+            String newItem=i.toString();
+            if(!search(newItem)){
+            items[count]=i;
+            count = count +1;
+            return true;
+            }
+        }
+            return false;
+    }
+    public boolean search(Object o){
+        if(!isEmpty()){
+            for(int i = 0; i < count; i++){
+                if(items[i].toString().equals(o.toString())){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public boolean checkIfEmpty(){
+        if(isEmpty()){
+            return true;
+        }
+        return false;
+    }
+
+    public int searchPart2(Object o){
+        if(!isEmpty()){
+            for(int i = 0; i < count ;i++){
+                if(items[i].toString().equals(o.toString())){
+                    return i;
+                }
+            }
+        }
+        return-1;
+    }
+    public Object get(int location){
+        if(!isEmpty()&& isLocationValid(location)){
+            return items[location-1];
+        }else{
+            return null;
+        }
+    }
+
+    public boolean remove(Object o){
+        if(!isEmpty()){
+            int loc = searchPart2(o);
+            if(loc != -1){
+                items[loc]=items[count-1];
+                items[count-1]=null;
+                count = count-1;
+                return true;
+
+            }else{
+                return false;
+            }
+        }
+        return false;
+    }
+    public boolean remove(int location){
+        if(!isEmpty()&&isLocationValid(location)){
+            items[location]=items[count-1];
+            items[count-1]=null;
+            count = count -1;
+            return true;
+        }
+        return false;
+    }
+    public void display(){
+
+        for(int i = 0; i < count; i ++){
+            System.out.printf("["+items[i]+"]");
+        }
+        System.out.println();
+
+    }
+    public boolean edit(Object i, int location){
+        if(!isEmpty() && isLocationValid(location)){
+            String newItem=i.toString();
+            if(!search(newItem)) {
+                items[location - 1] = i;
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean edit(Object old, Object newo){
+        if(!isEmpty() ){
+            if(!search(newo)) {
+                int location = searchPart2(old);
+                if (location != -1) {
+                    items[location] = newo;
+                    return true;
+                }
+            }
+
+        }
+        return false;
+    }
+
+    public boolean insert(Object o, int index){
+        if(!isEmpty()&&isLocationValid(index)){
+            if(!search(o)){
+                items[count]=items[index-1];
+                items[index-1]=o;
+                count=count+1;
+                return true;
+            }
+        }
+        return false;
+
+    }
+}
